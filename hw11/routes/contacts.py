@@ -16,7 +16,7 @@ async def read_contacts(skip: int = 0, limit: int = 100, db: Session = Depends(g
     return contacts
 
 
-@router.get("/", response_model=List[ContactResponse])
+@router.get("/upcoming-birthdays", response_model=List[ContactResponse])
 async def upcoming_birthdays(db: Session = Depends(get_db)):
     contacts = await repository_contacts.upcoming_birthdays(db)
     return contacts
@@ -26,7 +26,8 @@ async def upcoming_birthdays(db: Session = Depends(get_db)):
 async def find_contact(db: Session = Depends(get_db), first_name: str = None, last_name: str = None, email: str = None):
     contact = await repository_contacts.get_contact(db, first_name, last_name, email)
     if contact is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
     return contact
 
 
@@ -39,7 +40,8 @@ async def create_contact(body: ContactModel, db: Session = Depends(get_db)):
 async def update_contact(body: ContactModel, contact_id: int, db: Session = Depends(get_db)):
     contact = await repository_contacts.update_contact(contact_id, body, db)
     if contact is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
     return contact
 
 
@@ -47,5 +49,6 @@ async def update_contact(body: ContactModel, contact_id: int, db: Session = Depe
 async def remove_contact(contact_id: int, db: Session = Depends(get_db)):
     contact = await repository_contacts.remove_contact(contact_id, db)
     if contact is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
     return contact
